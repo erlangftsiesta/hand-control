@@ -6,7 +6,7 @@ mp_drawing = mp.solutions.drawing_utils
 mp_drawing_style = mp.solutions.drawing_styles
 mphands = mp.solutions.hands
 
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(1)
 hands = mphands.Hands()
 
 def is_hand_open(hand_landmarks):
@@ -45,7 +45,7 @@ while True:
             x, y = int(finger_tip.x * w), int(finger_tip.y * h)  # Konversi ke piksel
 
             print(f"Ujung jari telunjuk: x={x}, y={y}")
-            pyautogui.moveTo(x, y, duration=0)
+            pyautogui.moveTo(x, y, duration=0.1)
 
             cv2.putText(image, f"x: {x}, y: {y}", (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 2)
 
