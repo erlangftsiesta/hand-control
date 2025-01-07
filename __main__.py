@@ -9,6 +9,9 @@ mphands = mp.solutions.hands
 cap = cv2.VideoCapture(1)
 hands = mphands.Hands()
 
+# Dapatkan ukuran layar untuk skala
+screen_width, screen_height = pyautogui.size()
+
 def is_hand_open(hand_landmarks):
     # Landmark jari
     finger_tips = [
@@ -44,8 +47,12 @@ while True:
             h, w, _ = image.shape  # Mendapatkan tinggi dan lebar frame
             x, y = int(finger_tip.x * w), int(finger_tip.y * h)  # Konversi ke piksel
 
-            print(f"Ujung jari telunjuk: x={x}, y={y}")
-            pyautogui.moveTo(x, y, duration=0.1)
+            # Konversi koordinat ke skala layar
+            screen_x = int(finger_tip.x * screen_width)
+            screen_y = int(finger_tip.y * screen_height)
+
+            print(f"Ujung jari telunjuk: frame x={x}, y={y}, screen x={screen_x}, y={screen_y}")
+            pyautogui.moveTo(screen_x, screen_y, duration=0.1)
 
             cv2.putText(image, f"x: {x}, y: {y}", (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 2)
 
@@ -60,10 +67,12 @@ while True:
                 hand_landmarks,
                 mphands.HAND_CONNECTIONS
             )
-    
-    cv2.imshow('Handtracker', image)
+
+    image = cv2.resize(image, (1280, 720))            
+    cv2.imshow("Hand Tracking", image)
     if cv2.waitKey(1) & 0xFF == 27:  
         break
 
 cap.release()
 cv2.destroyAllWindows()
+s
